@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS campaigns;
+DROP TABLE IF EXISTS contacts;
+DROP TABLE IF EXISTS sequence_steps;
+DROP TABLE IF EXISTS sequences;
+DROP TABLE IF EXISTS mailboxes;
