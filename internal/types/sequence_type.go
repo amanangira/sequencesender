@@ -37,6 +37,33 @@ type StepResponse struct {
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
+type UpdateStepRequest struct {
+	Name    *string `json:"name,omitempty"`
+	Content *string `json:"content,omitempty"`
+}
+
+type UpdateStepResponse struct {
+	ID         int       `json:"id"`
+	Name       string    `json:"name"`
+	Content    string    `json:"content"`
+	DaysToWait int       `json:"days_to_wait"`
+	Order      int       `json:"order"`
+	UpdatedAt  time.Time `json:"updated_at"`
+}
+
+type UpdateSequenceTrackingRequest struct {
+	OpenTrackingEnabled  *bool `json:"open_tracking_enabled,omitempty"`
+	ClickTrackingEnabled *bool `json:"click_tracking_enabled,omitempty"`
+}
+
+type UpdateSequenceTrackingResponse struct {
+	ID                   int       `json:"id"`
+	Name                 string    `json:"name"`
+	OpenTrackingEnabled  bool      `json:"open_tracking_enabled"`
+	ClickTrackingEnabled bool      `json:"click_tracking_enabled"`
+	UpdatedAt            time.Time `json:"updated_at"`
+}
+
 type Sequence struct {
 	ID                   int        `db:"id"`
 	Name                 string     `db:"name"`

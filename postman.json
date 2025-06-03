@@ -1,0 +1,358 @@
+{
+	"info": {
+		"_postman_id": "98c281ee-afde-4aaa-ad6c-4654f3918e20",
+		"name": "SequenceSender",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "26040473"
+	},
+	"item": [
+		{
+			"name": "Get Sequence By Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Retargetting Campaign\",\n    \"open_tracking_enabled\": true,\n    \"click_tracking_enabled\": true,\n    \"steps\": [\n        {\n            \"name\": \"Warming up\",\n            \"content\": \"This is the content of step 1.\",\n            \"days_to_wait\": 1,\n            \"order\": 1\n        },\n        {\n            \"name\": \"Promotion introduction\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 2,\n            \"order\": 2\n        },\n        {\n            \"name\": \"Final Push\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 5,\n            \"order\": 3\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3000/api/sequences/1"
+			},
+			"response": [
+				{
+					"name": "Get Sequence By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Retargetting Campaign\",\n    \"open_tracking_enabled\": true,\n    \"click_tracking_enabled\": true,\n    \"steps\": [\n        {\n            \"name\": \"Warming up\",\n            \"content\": \"This is the content of step 1.\",\n            \"days_to_wait\": 1,\n            \"order\": 1\n        },\n        {\n            \"name\": \"Promotion introduction\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 2,\n            \"order\": 2\n        },\n        {\n            \"name\": \"Final Push\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 5,\n            \"order\": 3\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/sequences/1"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Jun 2025 16:26:51 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "820"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Retargetting Campaign\",\n        \"open_tracking_enabled\": true,\n        \"click_tracking_enabled\": true,\n        \"steps_count\": 3,\n        \"steps\": [\n            {\n                \"id\": 1,\n                \"name\": \"Updated Step Name\",\n                \"content\": \"Updated step content with new information\",\n                \"days_to_wait\": 1,\n                \"order\": 1,\n                \"created_at\": \"2025-06-03T16:01:16.201192Z\",\n                \"updated_at\": \"2025-06-03T16:26:47.845599Z\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Promotion introduction\",\n                \"content\": \"This is the content of step 2.\",\n                \"days_to_wait\": 2,\n                \"order\": 2,\n                \"created_at\": \"2025-06-03T16:01:16.201192Z\",\n                \"updated_at\": \"2025-06-03T16:01:16.201192Z\"\n            },\n            {\n                \"id\": 3,\n                \"name\": \"Final Push\",\n                \"content\": \"This is the content of step 2.\",\n                \"days_to_wait\": 5,\n                \"order\": 3,\n                \"created_at\": \"2025-06-03T16:01:16.201192Z\",\n                \"updated_at\": \"2025-06-03T16:01:16.201192Z\"\n            }\n        ],\n        \"created_at\": \"2025-06-03T16:01:16.201192Z\",\n        \"updated_at\": \"2025-06-03T16:01:16.201192Z\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Sequence Step by ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Updated Step Name\",\n    \"content\": \"Updated step content with new information\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/steps/1"
+			},
+			"response": [
+				{
+					"name": "Update Sequence by ID",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Step Name\",\n    \"content\": \"Updated step content with new information\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/steps/1"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Jun 2025 16:36:27 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "17"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete sequence step by ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3000/api/steps/1"
+			},
+			"response": [
+				{
+					"name": "Delete sequence step by ID",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:3000/api/steps/1"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Jun 2025 16:37:12 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"message\": \"step deleted successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Sequence by ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"click_tracking_enabled\": false,\n    \"open_tracking_enabled\" : false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/sequences/1"
+			},
+			"response": [
+				{
+					"name": "Update Sequence by ID",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"click_tracking_enabled\": false,\n    \"open_tracking_enabled\" : false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/sequences/1"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Jun 2025 16:43:09 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "17"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Sequence",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Retargetting Campaign\",\n    \"open_tracking_enabled\": true,\n    \"click_tracking_enabled\": true,\n    \"steps\": [\n        {\n            \"name\": \"Warming up\",\n            \"content\": \"This is the content of step 1.\",\n            \"days_to_wait\": 1,\n            \"order\": 1\n        },\n        {\n            \"name\": \"Promotion introduction\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 2,\n            \"order\": 2\n        },\n        {\n            \"name\": \"Final Push\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 5,\n            \"order\": 3\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3000/api/sequences"
+			},
+			"response": [
+				{
+					"name": "Get Sequence By Id",
+					"originalRequest": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Retargetting Campaign\",\n    \"open_tracking_enabled\": true,\n    \"click_tracking_enabled\": true,\n    \"steps\": [\n        {\n            \"name\": \"Warming up\",\n            \"content\": \"This is the content of step 1.\",\n            \"days_to_wait\": 1,\n            \"order\": 1\n        },\n        {\n            \"name\": \"Promotion introduction\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 2,\n            \"order\": 2\n        },\n        {\n            \"name\": \"Final Push\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 5,\n            \"order\": 3\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/sequences"
+					},
+					"_postman_previewlanguage": "",
+					"header": "",
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "Create Sequence",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Retargetting Campaign\",\n    \"open_tracking_enabled\": true,\n    \"click_tracking_enabled\": true,\n    \"steps\": [\n        {\n            \"name\": \"Warming up\",\n            \"content\": \"This is the content of step 1.\",\n            \"days_to_wait\": 1,\n            \"order\": 1\n        },\n        {\n            \"name\": \"Promotion introduction\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 2,\n            \"order\": 2\n        },\n        {\n            \"name\": \"Final Push\",\n            \"content\": \"This is the content of step 2.\",\n            \"days_to_wait\": 5,\n            \"order\": 3\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/sequences"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Jun 2025 16:42:32 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 2\n    },\n    \"message\": \"success\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

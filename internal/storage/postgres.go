@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 
 	"sequencesender/internal/types"
 
@@ -77,4 +78,125 @@ func (s *PostgresStorage) GetStepsBySequenceID(ctx context.Context, db *sqlx.DB,
 	}
 
 	return steps, nil
+}
+
+// UpdateStepByID updates a sequence step's name and/or content
+func (s *PostgresStorage) UpdateStepByID(ctx context.Context, db *sqlx.DB, stepID int, name *string, content *string) error {
+	setParts := []string{"updated_at = NOW()"}
+	args := []interface{}{}
+	argIndex := 1
+
+	if name != nil {
+		setParts = append(setParts, fmt.Sprintf("name = $%d", argIndex))
+		args = append(args, *name)
+		argIndex++
+	}
+
+	if content != nil {
+		setParts = append(setParts, fmt.Sprintf("body_content = $%d", argIndex))
+		args = append(args, *content)
+		argIndex++
+	}
+
+	if len(setParts) == 1 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	query := fmt.Sprintf("UPDATE sequence_steps SET %s WHERE id = $%d AND is_deleted = false",
+		strings.Join(setParts, ", "), argIndex)
+	args = append(args, stepID)
+
+	result, err := db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to update step: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get affected rows: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("step not found or already deleted")
+	}
+
+	return nil
+}
+
+// SoftDeleteStepByID soft deletes a sequence step
+func (s *PostgresStorage) SoftDeleteStepByID(ctx context.Context, db *sqlx.DB, stepID int) error {
+	query := `UPDATE sequence_steps SET is_deleted = true, updated_at = NOW() WHERE id = $1 AND is_deleted = false`
+
+	result, err := db.ExecContext(ctx, query, stepID)
+	if err != nil {
+		return fmt.Errorf("failed to soft delete step: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get affected rows: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("step not found or already deleted")
+	}
+
+	return nil
+}
+
+// GetStepByID retrieves a single step by ID
+func (s *PostgresStorage) GetStepByID(ctx context.Context, db *sqlx.DB, stepID int) (*types.SequenceStep, error) {
+	query := `SELECT id, sequence_id, name, body_content, days_to_wait, order_number, created_at, updated_at, is_deleted 
+		FROM sequence_steps WHERE id = $1 AND is_deleted = false`
+
+	var step types.SequenceStep
+	err := db.GetContext(ctx, &step, query, stepID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get step: %w", err)
+	}
+
+	return &step, nil
+}
+
+// UpdateSequenceTracking updates tracking settings for a sequence
+func (s *PostgresStorage) UpdateSequenceTracking(ctx context.Context, db *sqlx.DB, sequenceID int, openTracking *bool, clickTracking *bool) error {
+	setParts := []string{"updated_at = NOW()"}
+	args := []interface{}{}
+	argIndex := 1
+
+	if openTracking != nil {
+		setParts = append(setParts, fmt.Sprintf("open_tracking_enabled = $%d", argIndex))
+		args = append(args, *openTracking)
+		argIndex++
+	}
+
+	if clickTracking != nil {
+		setParts = append(setParts, fmt.Sprintf("click_tracking_enabled = $%d", argIndex))
+		args = append(args, *clickTracking)
+		argIndex++
+	}
+
+	if len(setParts) == 1 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	query := fmt.Sprintf("UPDATE sequences SET %s WHERE id = $%d AND is_deleted = false",
+		strings.Join(setParts, ", "), argIndex)
+	args = append(args, sequenceID)
+
+	result, err := db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to update sequence tracking: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get affected rows: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("sequence not found or doesn't exist")
+	}
+
+	return nil
 }

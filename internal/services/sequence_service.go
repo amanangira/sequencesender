@@ -156,3 +156,78 @@ func (s *SequenceService) validateCreateRequest(req types.CreateSequenceRequest)
 
 	return nil
 }
+
+// UpdateStep updates a sequence step's name and/or content
+func (s *SequenceService) UpdateStep(ctx context.Context, stepIDStr string, req types.UpdateStepRequest) error {
+	stepID, err := strconv.Atoi(strings.TrimSpace(stepIDStr))
+	if err != nil {
+		return fmt.Errorf("invalid step ID format: %w", err)
+	}
+
+	if req.Name == nil && req.Content == nil {
+		return fmt.Errorf("validation failed: at least one field (name or content) must be provided")
+	}
+
+	if req.Name != nil && strings.TrimSpace(*req.Name) == "" {
+		return fmt.Errorf("validation failed: name cannot be empty")
+	}
+
+	if req.Content != nil && strings.TrimSpace(*req.Content) == "" {
+		return fmt.Errorf("validation failed: content cannot be empty")
+	}
+
+	if req.Name != nil && len(*req.Name) > 255 {
+		return fmt.Errorf("validation failed: name too long (max 255 characters)")
+	}
+
+	err = s.storage.UpdateStepByID(ctx, s.db, stepID, req.Name, req.Content)
+	if err != nil {
+		return fmt.Errorf("failed to update step: %w", err)
+	}
+
+	_, err = s.storage.GetStepByID(ctx, s.db, stepID)
+	if err != nil {
+		return fmt.Errorf("failed to get updated step: %w", err)
+	}
+
+	return nil
+}
+
+// SoftDeleteStep soft deletes a sequence step
+func (s *SequenceService) SoftDeleteStep(ctx context.Context, stepIDStr string) error {
+	stepID, err := strconv.Atoi(strings.TrimSpace(stepIDStr))
+	if err != nil {
+		return fmt.Errorf("invalid step ID format: %w", err)
+	}
+
+	err = s.storage.SoftDeleteStepByID(ctx, s.db, stepID)
+	if err != nil {
+		return fmt.Errorf("failed to soft delete step: %w", err)
+	}
+
+	return nil
+}
+
+// UpdateSequenceTracking updates tracking settings for a sequence
+func (s *SequenceService) UpdateSequenceTracking(ctx context.Context, sequenceIDStr string, req types.UpdateSequenceTrackingRequest) error {
+	sequenceID, err := strconv.Atoi(strings.TrimSpace(sequenceIDStr))
+	if err != nil {
+		return fmt.Errorf("invalid sequence ID format: %w", err)
+	}
+
+	if req.OpenTrackingEnabled == nil && req.ClickTrackingEnabled == nil {
+		return fmt.Errorf("validation failed: at least one tracking field must be provided")
+	}
+
+	err = s.storage.UpdateSequenceTracking(ctx, s.db, sequenceID, req.OpenTrackingEnabled, req.ClickTrackingEnabled)
+	if err != nil {
+		return fmt.Errorf("failed to update sequence tracking: %w", err)
+	}
+
+	_, err = s.storage.GetSequenceByID(ctx, s.db, sequenceID)
+	if err != nil {
+		return fmt.Errorf("failed to get updated sequence: %w", err)
+	}
+
+	return nil
+}
