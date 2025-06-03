@@ -75,7 +75,7 @@ bin/migrator/migrate --help
 ```
 
 ## TODO 
-- Makefile aliases
+- ~~Makefile aliases~~
 - Unit tests - test coverage Makefile alias
 - [Bonus] Add utility to scaffold handler/service/storage methods 
 - [Bonus] Add di management library like uber/wire.
