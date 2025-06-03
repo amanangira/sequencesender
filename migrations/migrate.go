@@ -3,6 +3,7 @@ package migrations
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"log/slog"
@@ -33,9 +34,10 @@ var migrateUpCmd = &cobra.Command{
 		m := getMigrator()
 		defer m.Close()
 
-		if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-			log.Fatal("Failed to apply migrations:", err)
+		if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+			log.Fatal("failed to apply migrations:", err)
 		}
+
 		fmt.Println("Migrations applied successfully")
 	},
 }
@@ -48,7 +50,7 @@ var migrateDownCmd = &cobra.Command{
 		defer m.Close()
 
 		if err := m.Steps(-1); err != nil && err != migrate.ErrNoChange {
-			log.Fatal("Failed to rollback migration:", err)
+			log.Fatal("failed to rollback migration:", err)
 		}
 		fmt.Println("Migration rolled back successfully")
 	},
@@ -61,14 +63,14 @@ var migrateToCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		version, err := strconv.ParseUint(args[0], 10, 32)
 		if err != nil {
-			log.Fatal("Invalid version number:", err)
+			log.Fatal("invalid version number:", err)
 		}
 
 		m := getMigrator()
 		defer m.Close()
 
 		if err := m.Migrate(uint(version)); err != nil && err != migrate.ErrNoChange {
-			log.Fatal("Failed to migrate to version", version, ":", err)
+			log.Fatal("failed to migrate to version", version, ":", err)
 		}
 		fmt.Printf("Migrated to version %d successfully\n", version)
 	},
@@ -83,7 +85,7 @@ var versionCmd = &cobra.Command{
 
 		version, dirty, err := m.Version()
 		if err != nil {
-			log.Fatal("Failed to get version:", err)
+			log.Fatal("failed to get version:", err)
 		}
 
 		if dirty {
@@ -98,25 +100,25 @@ func getMigrator() *migrate.Migrate {
 	// Load env if --development flag is set
 	if developmentFlag {
 		if err := godotenv.Load(); err != nil {
-			slog.Error("Failed to load .env file", "error", err)
+			slog.Error("failed to load .env file", "error", err)
 		} else {
-			slog.Info("Environment variables loaded from .env file")
+			slog.Info("environment variables loaded from .env file")
 		}
 	}
 
 	dbURL := os.Getenv(sequencesender.EnvDBURLKey)
 	if dbURL == "" {
-		log.Fatal("DATABASE_URL environment variable is required")
+		log.Fatal(sequencesender.EnvDBURLKey + " environment variable is required")
 	}
 
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatal("failed to connect to database:", err)
 	}
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
-		log.Fatal("Failed to create database driver:", err)
+		log.Fatal("failed to create database driver:", err)
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
@@ -125,7 +127,7 @@ func getMigrator() *migrate.Migrate {
 		driver,
 	)
 	if err != nil {
-		log.Fatal("Failed to create migrator:", err)
+		log.Fatal("failed to create migrator:", err)
 	}
 
 	return m

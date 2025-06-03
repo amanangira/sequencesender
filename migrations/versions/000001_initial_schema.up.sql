@@ -1,8 +1,7 @@
--- For uuid
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Remove UUID extension and use SERIAL for auto-incrementing integers
 
 CREATE TABLE mailboxes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     total_capacity INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -11,7 +10,7 @@ CREATE TABLE mailboxes (
 );
 
 CREATE TABLE sequences (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     open_tracking_enabled BOOLEAN DEFAULT FALSE,
     click_tracking_enabled BOOLEAN DEFAULT FALSE,
@@ -21,8 +20,8 @@ CREATE TABLE sequences (
 );
 
 CREATE TABLE sequence_steps (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    sequence_id UUID NOT NULL REFERENCES sequences(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    sequence_id INTEGER NOT NULL REFERENCES sequences(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     body_content TEXT NOT NULL,
     days_to_wait BIGINT NOT NULL DEFAULT 0,
@@ -33,7 +32,7 @@ CREATE TABLE sequence_steps (
 );
 
 CREATE TABLE contacts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -42,11 +41,11 @@ CREATE TABLE contacts (
 );
 
 CREATE TABLE campaigns (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    sequence_id UUID NOT NULL REFERENCES sequences(id) ON DELETE CASCADE,
-    sequence_step_id UUID NOT NULL REFERENCES sequence_steps(id) ON DELETE CASCADE,
-    mailbox_id UUID NOT NULL REFERENCES mailboxes(id) ON DELETE CASCADE,
-    contact_id UUID NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    sequence_id INTEGER NOT NULL REFERENCES sequences(id) ON DELETE CASCADE,
+    sequence_step_id INTEGER NOT NULL REFERENCES sequence_steps(id) ON DELETE CASCADE,
+    mailbox_id INTEGER NOT NULL REFERENCES mailboxes(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
