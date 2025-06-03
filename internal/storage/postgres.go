@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
+
 	"sequencesender/internal/types"
 
 	"github.com/jmoiron/sqlx"
@@ -50,7 +52,8 @@ func (s *PostgresStorage) CreateSteps(ctx context.Context, tx *sql.Tx, sequenceI
 }
 
 func (s *PostgresStorage) GetSequenceByID(ctx context.Context, db *sqlx.DB, id int) (*types.Sequence, error) {
-	query := `SELECT id, name, open_tracking_enabled, click_tracking_enabled, created_at, updated_at, is_deleted FROM sequences WHERE id = $1 AND is_deleted IS NULL`
+	log.Println("id : ", id)
+	query := `SELECT id, name, open_tracking_enabled, click_tracking_enabled, created_at, updated_at, is_deleted FROM sequences WHERE id = $1 AND is_deleted IS false`
 
 	var seq types.Sequence
 	err := db.GetContext(ctx, &seq, query, id)

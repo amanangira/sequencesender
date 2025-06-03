@@ -87,12 +87,34 @@ func (s *SequenceService) GetSequence(ctx context.Context, idStr string) (*types
 		updatedAt = *sequence.UpdatedAt
 	}
 
+	stepResponses := make([]types.StepResponse, len(steps))
+	for i, step := range steps {
+		var stepCreatedAt, stepUpdatedAt time.Time
+		if step.CreatedAt != nil {
+			stepCreatedAt = *step.CreatedAt
+		}
+		if step.UpdatedAt != nil {
+			stepUpdatedAt = *step.UpdatedAt
+		}
+
+		stepResponses[i] = types.StepResponse{
+			ID:         step.ID,
+			Name:       step.Name,
+			Content:    step.BodyContent,
+			DaysToWait: step.DaysToWait,
+			Order:      step.OrderNumber,
+			CreatedAt:  stepCreatedAt,
+			UpdatedAt:  stepUpdatedAt,
+		}
+	}
+
 	return &types.SequenceResponse{
 		ID:                   sequence.ID,
 		Name:                 sequence.Name,
 		OpenTrackingEnabled:  sequence.OpenTrackingEnabled,
 		ClickTrackingEnabled: sequence.ClickTrackingEnabled,
 		StepsCount:           len(steps),
+		Steps:                stepResponses,
 		CreatedAt:            createdAt,
 		UpdatedAt:            updatedAt,
 	}, nil

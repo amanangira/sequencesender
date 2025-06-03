@@ -17,13 +17,24 @@ type CreateStepRequest struct {
 }
 
 type SequenceResponse struct {
-	ID                   int       `json:"id"`
-	Name                 string    `json:"name"`
-	OpenTrackingEnabled  bool      `json:"open_tracking_enabled"`
-	ClickTrackingEnabled bool      `json:"click_tracking_enabled"`
-	StepsCount           int       `json:"steps_count"`
-	CreatedAt            time.Time `json:"created_at"`
-	UpdatedAt            time.Time `json:"updated_at"`
+	ID                   int            `json:"id"`
+	Name                 string         `json:"name"`
+	OpenTrackingEnabled  bool           `json:"open_tracking_enabled"`
+	ClickTrackingEnabled bool           `json:"click_tracking_enabled"`
+	StepsCount           int            `json:"steps_count"`
+	Steps                []StepResponse `json:"steps"`
+	CreatedAt            time.Time      `json:"created_at"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+}
+
+type StepResponse struct {
+	ID         int       `json:"id"`
+	Name       string    `json:"name"`
+	Content    string    `json:"content"`
+	DaysToWait int       `json:"days_to_wait"`
+	Order      int       `json:"order"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 type Sequence struct {
@@ -33,7 +44,7 @@ type Sequence struct {
 	ClickTrackingEnabled bool       `db:"click_tracking_enabled"`
 	CreatedAt            *time.Time `db:"created_at"`
 	UpdatedAt            *time.Time `db:"updated_at"`
-	IsDeleted            *time.Time `db:"is_deleted"`
+	IsDeleted            bool       `db:"is_deleted"`
 }
 
 type SequenceStep struct {

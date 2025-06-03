@@ -6,7 +6,7 @@ CREATE TABLE mailboxes (
     total_capacity INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    is_deleted TIMESTAMP WITH TIME ZONE
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE sequences (
@@ -16,7 +16,7 @@ CREATE TABLE sequences (
     click_tracking_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    is_deleted TIMESTAMP WITH TIME ZONE
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE sequence_steps (
