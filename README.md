@@ -1,11 +1,13 @@
 # SequenceSender
 
-A Go application for creating and managing email sequence campaigns.
+A Go application for creating and managing email sequence campaigns. This application uses handler-service 
+design pattern that provides good separation of concern without introducing too much boilerplate code and compromising
+extensibility.
 
 ## Prerequisites
 
 - Go 1.21 or higher
-- Docker and Docker Compose
+- Docker/OrbStack and Docker Compose
 - PostgreSQL
 
 ## Setup
@@ -74,14 +76,33 @@ sudo chmod +x bin/migrator/migrate
 bin/migrator/migrate --help
 ```
 
+### Unit Tests 
+This project uses [vektra/mockery](https://github.com/vektra/mockery) for generating mocks and 
+[stretchr/testify](https://github.com/stretchr/testify) for assert helpers. 
+
+See .mockery.yaml for mockery configurations.
+
+Run 
+```sh
+mockery
+```
+
+or 
+```sh
+make mocks
+```
+
+to generate mocks based on .mockery.yaml.
+
 ## TODO 
 - ~~Makefile aliases~~
-- Unit tests - test coverage Makefile alias
-- [Bonus] Add utility to scaffold handler/service/storage methods 
-- [Bonus] Add di management library like uber/wire.
-- Configure linters
-- Error wrapping, propogation and central logging
-- Validator library
+- ~~Unit tests - test coverage Makefile alias~~
+- [Bonus] 
+  - Add utility to scaffold handler/service/storage methods 
+  - Add di management library like uber/wire.
+  - Configure linters
+  - Error wrapping, propogation and central logging
+  - Validator library
 
 ## Order of imports
 - standard library 
