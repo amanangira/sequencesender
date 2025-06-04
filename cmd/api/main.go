@@ -8,6 +8,7 @@ import (
 
 	"sequencesender/internal/handlers"
 	"sequencesender/internal/services"
+	"sequencesender/internal/storage"
 	"sequencesender/pkg/dbclient"
 
 	"github.com/go-chi/chi/v5"
@@ -46,7 +47,7 @@ func main() {
 	}
 	slog.Info("database connection established successfully")
 
-	sequenceService := services.NewSequenceService(dbClient)
+	sequenceService := services.NewSequenceServiceWithStorage(dbClient, storage.NewPostgresStorage())
 
 	sequenceHandler := handlers.NewSequenceHandler(sequenceService)
 

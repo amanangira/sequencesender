@@ -12,10 +12,13 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// PostgresStorage provides database operations without holding DB connections
+// to check at compile time that PostgresStorage implements StorageInterface
+var _ StorageInterface = (*PostgresStorage)(nil)
+
+// PostgresStorage provides database operations
 type PostgresStorage struct{}
 
-// NewPostgresStorage creates a new storage instance (no DB dependency)
+// NewPostgresStorage creates a new storage instance
 func NewPostgresStorage() *PostgresStorage {
 	return &PostgresStorage{}
 }
