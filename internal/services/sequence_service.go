@@ -4,25 +4,26 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"sequencesender"
-	"sequencesender/internal/storage"
-	"sequencesender/internal/types"
 	"strconv"
 	"strings"
 	"time"
+
+	"sequencesender"
+	"sequencesender/internal/storage"
+	"sequencesender/internal/types"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type SequenceService struct {
 	db      *sqlx.DB
-	storage *storage.PostgresStorage
+	storage storage.StorageInterface
 }
 
-func NewSequenceService(db *sqlx.DB) *SequenceService {
+func NewSequenceServiceWithStorage(db *sqlx.DB, storage storage.StorageInterface) *SequenceService {
 	return &SequenceService{
 		db:      db,
-		storage: storage.NewPostgresStorage(),
+		storage: storage,
 	}
 }
 
@@ -126,14 +127,14 @@ func (s *SequenceService) validateCreateRequest(req types.CreateSequenceRequest)
 		return errors.New("sequence name is required")
 	}
 
+	if len(req.Steps) < 1 {
+		return errors.New("sequence should have atleast one step")
+	}
+
 	orderMap := make(map[int]bool)
 	for i, step := range req.Steps {
 		if strings.TrimSpace(step.Name) == "" {
 			return fmt.Errorf("step %d: name is required", i+1)
-		}
-
-		if len(step.Name) > 255 {
-			return fmt.Errorf("step %d: name too long (max 255 characters)", i+1)
 		}
 
 		if strings.TrimSpace(step.Content) == "" {
@@ -174,10 +175,6 @@ func (s *SequenceService) UpdateStep(ctx context.Context, stepIDStr string, req 
 
 	if req.Content != nil && strings.TrimSpace(*req.Content) == "" {
 		return fmt.Errorf("validation failed: content cannot be empty")
-	}
-
-	if req.Name != nil && len(*req.Name) > 255 {
-		return fmt.Errorf("validation failed: name too long (max 255 characters)")
 	}
 
 	err = s.storage.UpdateStepByID(ctx, s.db, stepID, req.Name, req.Content)
