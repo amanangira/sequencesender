@@ -1,0 +1,15 @@
+dir: "{{.InterfaceDirRelative }}/mocks"
+mockname: "{{.InterfaceName}}"
+outpkg: "mocks"
+filename: "{{.InterfaceNameSnake}}.go"
+all: false
+resolve-type-alias: false
+disable-version-string: true
+issue-845-fix: true
+packages:
+  sequencesender/internal/storage:
+    interfaces:
+      StorageInterface:
+        config:
+          filename: "postgres.go"
+          dir: "tests/mocks"
